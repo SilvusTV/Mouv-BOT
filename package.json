@@ -1,0 +1,24 @@
+{
+  "name": "mouv-bot",
+  "version": "1.0.0",
+  "description": "The code belonging to the \"Mouv-BOT\", a twitch chatbot for the \"mouv\" channel",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SilvusTV/Mouv-BOT.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SilvusTV/Mouv-BOT/issues"
+  },
+  "homepage": "https://github.com/SilvusTV/Mouv-BOT#readme",
+  "dependencies": {
+    "dotenv": "^16.0.2",
+    "tmi.js": "^1.8.5"
+  }
+}
