@@ -1,5 +1,7 @@
 import tmi from 'tmi.js'
 import {BOT_USERNAME, OAUTH_TOKEN, CHANNEL_NAME} from './constants'
+const sqlite3 = require('sqlite3')
+const dbname = 'main.db'
 
 const options ={
 	options: { debug: true },
@@ -20,19 +22,34 @@ client.connect();
 
 client.on('message', (channel, tags, message, self) => {
 	if(self) return;
-	if(message.toLowerCase() === '!commandes') {
-		client.say(channel, `@${tags.username} Les commandes sont : \n→ !invités : donne la liste des invités de ce soir \n→ !numéros : donne la liste des numéros à retenir !`);
+	if(message.toLowerCase() === '!commande') {
+		client.say(channel, `@${tags.username} Contenue de la commande.`);
 	}
-    if(message.toLowerCase() === '!invités') {
-		client.say(channel, `@${tags.username} Les invités de ce soir sont les mêmes que la semaine dernière : →Djimo et →Bolemvn   (!djimo et !bole disponible !).`);
-	}
-    if(message.toLowerCase() === '!numéros') {
-		client.say(channel, `@${tags.username} Pour participer à l'émission, vous pouvez nous appeler ici : 0145242020. Si vous voulez passer dans la prochaine émission, envoyez nous un message What'sApp ici : 0617340800 !`);
-	}
-    if(message.toLowerCase() === '!djimo') {
-		client.say(channel, `@${tags.username} Suivez l'actualitée de Djimo ici : https://www.instagram.com/djimoofficiel`);
-	}
-    if(message.toLowerCase() === '!bole') {
-		client.say(channel, `@${tags.username} Suivez l'actualitée de Bolemvn ici : https://www.instagram.com/bolemvn7binks`);
-	}
+    
 });
+
+let db = new sqlite3.Database(dbname, err => {
+
+    if (err)
+        throw err
+    
+    console.log ('DB started on ' + dbname)
+
+	client.on('message', (channel, tags, message, self) => {
+		const user = tags.username
+		db.get(`SELECT * FROM messagePower WHERE Username = '${user}'`, (err, dataUsername) =>{
+			if(err)
+				throw err
+			if(dataUsername === undefined){
+				db.run(`INSERT INTO messagePower(Username, Power) VALUES('${user}', '1')`)
+				console.log('Nouvel utilisateur')
+			}else{
+				const newPower = dataUsername.Power + 1	
+				db.run(`UPDATE messagePower SET Power = ${newPower} WHERE Username = '${dataUsername.Username}'`)
+			}
+			
+		})
+		
+	}); 
+		
+}) 
